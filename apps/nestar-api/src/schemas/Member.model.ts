@@ -115,6 +115,11 @@ const MemberSchema = new Schema(
       default: 0,
     },
 
+    mainMember: {
+      type: Boolean,
+      default: null,
+    },
+
     deletedAt: {
       type: Date,
     },

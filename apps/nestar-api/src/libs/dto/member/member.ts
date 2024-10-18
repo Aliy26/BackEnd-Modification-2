@@ -42,6 +42,9 @@ export class Member {
   @Field(() => String, { nullable: true })
   memberDesc?: string;
 
+  @Field(() => Boolean, { nullable: true })
+  mainMember?: boolean;
+
   @Field(() => Int)
   memberProperties: number;
 

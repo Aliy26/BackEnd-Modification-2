@@ -120,10 +120,11 @@ export class MemberResolver {
   @Mutation(() => Member)
   public async updateMemberByAdmin(
     @Args("input") input: MemberUpdate,
+    @AuthMember("_id") memberId: ObjectId,
   ): Promise<Member> {
     console.log("Mutation: updateMemberByAdmin");
 
-    return await this.memberService.updateMemmberByAdmin(input);
+    return await this.memberService.updateMemberByAdmin(memberId, input);
   }
 
   //** Image Uploader  **//
