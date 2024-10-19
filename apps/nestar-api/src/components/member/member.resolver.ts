@@ -69,7 +69,6 @@ export class MemberResolver {
     @AuthMember("_id") memberId: ObjectId,
   ): Promise<Members> {
     console.log("Query, getAgents");
-    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>s>", input);
     return await this.memberService.getAgents(memberId, input);
   }
 
@@ -104,8 +103,9 @@ export class MemberResolver {
     return await this.memberService.likeTargetMember(memberId, likeRefId);
   }
 
-  //** ADMIN **//
+  @UseGuards(AuthGuard)
 
+  //** ADMIN **//
   @Roles(MemberType.ADMIN)
   @UseGuards(RolesGuard)
   @Query(() => Members)
