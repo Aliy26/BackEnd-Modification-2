@@ -17,7 +17,6 @@ import { ObjectId } from "mongoose";
 import { WithoutGuard } from "../auth/guards/without.guard";
 import { shapeIntoMongoObjectId } from "../../libs/config";
 import { PropertyUpdate } from "../../libs/dto/property/property.update";
-import { Member } from "../../libs/dto/member/member";
 import { AuthGuard } from "../auth/guards/auth.guard";
 
 @Resolver()
