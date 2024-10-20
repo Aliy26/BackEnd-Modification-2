@@ -176,6 +176,9 @@ export class PropertyService {
               { $skip: (input.page - 1) * input.limit },
               { $limit: input.limit },
               lookupAuthMemberLiked(memberId),
+              {
+                $unwind: { preserveNullAndEmptyArrays: true, path: "$meLiked" },
+              },
               lookupMember,
               { $unwind: "$memberData" },
             ],
@@ -186,7 +189,7 @@ export class PropertyService {
       .exec();
     if (!result.length)
       throw new InternalServerErrorException(Message.NO_DATA_FOUND);
-    console.log(result[0].meLiked);
+
     return result[0];
   }
 
@@ -221,7 +224,7 @@ export class PropertyService {
       };
 
     if (text) match.propertyTitle = { $regex: new RegExp(text, "i") };
-    if (options) {
+    if (options && options.length) {
       match["$or"] = options.map((ele) => {
         return { [ele]: true };
       });
