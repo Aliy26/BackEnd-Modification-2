@@ -29,14 +29,16 @@ import {
 import { LikeInput } from "../../libs/dto/like/like.input";
 import { LikeGroup } from "../../libs/enums/like.enum";
 import { LikeService } from "../like/like.service";
+import { NotificationService } from "../notification/notification.service";
 
 @Injectable()
 export class PropertyService {
   constructor(
     @InjectModel("Property") private readonly propertyModel: Model<Property>,
-    private memberService: MemberService,
-    private viewService: ViewService,
-    private likeService: LikeService,
+    private readonly memberService: MemberService,
+    private readonly viewService: ViewService,
+    private readonly likeService: LikeService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   public async createProperty(input: PropertyInput): Promise<Property> {
@@ -298,14 +300,26 @@ export class PropertyService {
       likeGroup: LikeGroup.PROPERTY,
     };
 
+    const member = await this.memberService.getMember(null, target.memberId);
+
     // LIKE TOGGLE via Like Module
 
     const modifier: number = await this.likeService.toggleLike(input);
+
     const result = await this.propertyStatsEditor({
       _id: likeRefId,
       targetKey: "propertyLikes",
       modifier,
     });
+
+    if (result) {
+      await this.notificationService.notifyLike(
+        memberId,
+        member._id,
+        likeRefId,
+        null,
+      );
+    }
 
     if (!result)
       throw new InternalServerErrorException(Message.SOMETHING_WENT_WRONG);

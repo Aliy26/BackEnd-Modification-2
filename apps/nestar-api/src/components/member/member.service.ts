@@ -25,6 +25,7 @@ import { LikeGroup } from "../../libs/enums/like.enum";
 import { LikeService } from "../like/like.service";
 import { Follower, Following, MeFollowed } from "../../libs/dto/follow/follow";
 import { lookupAuthMemberLiked } from "../../libs/config";
+import { NotificationService } from "../notification/notification.service";
 
 @Injectable()
 export class MemberService {
@@ -32,9 +33,10 @@ export class MemberService {
     @InjectModel("Member") private readonly memberModel: Model<Member>,
     @InjectModel("Follow")
     private readonly followModel: Model<Follower | Following>,
-    private authService: AuthService,
-    private viewService: ViewService,
-    private likeService: LikeService,
+    private readonly authService: AuthService,
+    private readonly viewService: ViewService,
+    private readonly likeService: LikeService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   public async signup(input: MemberInput): Promise<Member> {
@@ -220,6 +222,14 @@ export class MemberService {
 
     if (!result)
       throw new InternalServerErrorException(Message.SOMETHING_WENT_WRONG);
+    else if (result) {
+      await this.notificationService.notifyLike(
+        memberId,
+        likeRefId,
+        null,
+        null,
+      );
+    }
     return result;
   }
 
