@@ -14,13 +14,19 @@ import {
 import { MemberService } from "../member/member.service";
 import { Direction, Message } from "../../libs/enums/common.enum";
 import { FollowInquiry } from "../../libs/dto/follow/follow.input";
-import { T } from "../../libs/types/common";
+import { NotificationInput, T } from "../../libs/types/common";
 import {
   lookupAuthMemberFollowed,
   lookupAuthMemberLiked,
   lookupFollowerData,
   lookupFollowingData,
 } from "../../libs/config";
+import { NotificationService } from "../notification/notification.service";
+import {
+  NotificationGroup,
+  NotificationTitle,
+  NotificationType,
+} from "../../libs/enums/notification.enum";
 
 @Injectable()
 export class FollowService {
@@ -28,6 +34,7 @@ export class FollowService {
     @InjectModel("Follow")
     private readonly followModel: Model<Follower | Following>,
     private readonly memberService: MemberService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   public async subscribe(
@@ -43,6 +50,16 @@ export class FollowService {
       throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
     const result = await this.registerSubscription(followerId, followingId);
+
+    const notificationInput: NotificationInput = {
+      authorId: followerId,
+      receiverId: followingId,
+      notificationGroup: NotificationGroup.MEMBER,
+      notificationType: NotificationType.FOLLOW,
+      notificationTitle: NotificationTitle.FOLLOW,
+    };
+
+    await this.notificationService.notifyLike(notificationInput);
 
     await this.memberService.memberStatsEditor({
       _id: followerId,
