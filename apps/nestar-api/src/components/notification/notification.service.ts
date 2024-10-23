@@ -5,16 +5,14 @@ import {
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, ObjectId } from "mongoose";
-import { PropertyService } from "../property/property.service";
-import { NotificationInput } from "../../libs/dto/notification/notification.input";
 import { Message } from "../../libs/enums/common.enum";
-import { MemberService } from "../member/member.service";
 import { Notification } from "../../libs/dto/notification/notification";
 import {
   NotificationGroup,
   NotificationStatus,
   NotificationType,
 } from "../../libs/enums/notification.enum";
+import { NotificationInput } from "../../libs/types/common";
 
 @Injectable()
 export class NotificationService {
@@ -23,12 +21,15 @@ export class NotificationService {
     private readonly notificationModel: Model<Notification>,
   ) {}
 
-  public async notifyLike(
-    authorId: ObjectId,
-    receiverId: ObjectId,
-    propertyId: ObjectId,
-    articleId: ObjectId,
-  ): Promise<Notification> {
+  public async notifyLike(input: NotificationInput): Promise<Notification> {
+    const {
+      authorId,
+      receiverId,
+      propertyId,
+      articleId,
+      notificationGroup,
+      notificationType,
+    } = input;
     try {
       const exist = await this.notificationModel
         .findOne({
@@ -41,13 +42,8 @@ export class NotificationService {
 
       if (!exist) {
         const input = {
-          notificationType: NotificationType.LIKE,
-          notificationGroup: propertyId
-            ? NotificationGroup.PROPERTY
-            : articleId
-              ? NotificationGroup.ARTICLE
-              : NotificationGroup.MEMBER,
-          notificationTitle: "NEW LIKE",
+          notificationType,
+          notificationGroup,
           authorId,
           receiverId,
           propertyId,

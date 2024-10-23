@@ -19,7 +19,11 @@ import { Direction, Message } from "../../libs/enums/common.enum";
 import { ViewGroup } from "../../libs/enums/view.enum";
 import { ViewService } from "../view/view.service";
 import { BoardArticleStatus } from "../../libs/enums/board-article.enum";
-import { StatisticModifier, T } from "../../libs/types/common";
+import {
+  NotificationInput,
+  StatisticModifier,
+  T,
+} from "../../libs/types/common";
 import { BoardArticleUpdate } from "../../libs/dto/board-article/board-article.update";
 import {
   lookupAuthMemberLiked,
@@ -30,6 +34,11 @@ import { LikeService } from "../like/like.service";
 import { LikeGroup } from "../../libs/enums/like.enum";
 import { LikeInput } from "../../libs/dto/like/like.input";
 import { NotificationService } from "../notification/notification.service";
+import {
+  NotificationGroup,
+  NotificationTitle,
+  NotificationType,
+} from "../../libs/enums/notification.enum";
 
 @Injectable()
 export class BoardArticleService {
@@ -200,23 +209,26 @@ export class BoardArticleService {
       likeGroup: LikeGroup.ARTICLE,
     };
 
+    const notificationInput: NotificationInput = {
+      authorId: memberId,
+      receiverId: member._id,
+      articleId: likeRefId,
+      notificationGroup: NotificationGroup.ARTICLE,
+      notificationType: NotificationType.LIKE,
+      notifactionTitle: NotificationTitle.LIKE,
+    };
     // LIKE TOGGLE via Like Module
 
     const modifier: number = await this.likeService.toggleLike(input);
+    if (modifier === 1) {
+      await this.notificationService.notifyLike(notificationInput);
+    }
+
     const result = await this.boardArticleStatsEditor({
       _id: likeRefId,
       targetKey: "articleLikes",
       modifier,
     });
-
-    if (result) {
-      await this.notificationService.notifyLike(
-        memberId,
-        member._id,
-        null,
-        likeRefId,
-      );
-    }
 
     if (!result)
       throw new InternalServerErrorException(Message.SOMETHING_WENT_WRONG);

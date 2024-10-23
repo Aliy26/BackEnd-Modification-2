@@ -16,7 +16,11 @@ import { MemberStatus, MemberType } from "../../libs/enums/member.enum";
 import { Direction, Message } from "../../libs/enums/common.enum";
 import { AuthService } from "../auth/auth.service";
 import { MemberUpdate } from "../../libs/dto/member/member.update";
-import { StatisticModifier, T } from "../../libs/types/common";
+import {
+  NotificationInput,
+  StatisticModifier,
+  T,
+} from "../../libs/types/common";
 import { ViewService } from "../view/view.service";
 import { ViewInput } from "../../libs/dto/view/view.input";
 import { ViewGroup } from "../../libs/enums/view.enum";
@@ -26,6 +30,11 @@ import { LikeService } from "../like/like.service";
 import { Follower, Following, MeFollowed } from "../../libs/dto/follow/follow";
 import { lookupAuthMemberLiked } from "../../libs/config";
 import { NotificationService } from "../notification/notification.service";
+import {
+  NotificationGroup,
+  NotificationTitle,
+  NotificationType,
+} from "../../libs/enums/notification.enum";
 
 @Injectable()
 export class MemberService {
@@ -212,6 +221,13 @@ export class MemberService {
     };
 
     // LIKE TOGGLE via Like Module
+    const notificationInput: NotificationInput = {
+      authorId: memberId,
+      receiverId: likeRefId,
+      notificationGroup: NotificationGroup.MEMBER,
+      notificationType: NotificationType.LIKE,
+      notifactionTitle: NotificationTitle.LIKE,
+    };
 
     const modifier: number = await this.likeService.toggleLike(input);
     const result = await this.memberStatsEditor({
@@ -223,12 +239,7 @@ export class MemberService {
     if (!result)
       throw new InternalServerErrorException(Message.SOMETHING_WENT_WRONG);
     else if (result) {
-      await this.notificationService.notifyLike(
-        memberId,
-        likeRefId,
-        null,
-        null,
-      );
+      await this.notificationService.notifyLike(notificationInput);
     }
     return result;
   }

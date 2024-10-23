@@ -15,7 +15,11 @@ import {
 } from "../../libs/dto/property/property.input";
 import { Direction, Message } from "../../libs/enums/common.enum";
 import { MemberService } from "../member/member.service";
-import { StatisticModifier, T } from "../../libs/types/common";
+import {
+  NotificationInput,
+  StatisticModifier,
+  T,
+} from "../../libs/types/common";
 import { PropertyStatus } from "../../libs/enums/property.enum";
 import { ViewGroup } from "../../libs/enums/view.enum";
 import { ViewService } from "../view/view.service";
@@ -30,6 +34,11 @@ import { LikeInput } from "../../libs/dto/like/like.input";
 import { LikeGroup } from "../../libs/enums/like.enum";
 import { LikeService } from "../like/like.service";
 import { NotificationService } from "../notification/notification.service";
+import {
+  NotificationGroup,
+  NotificationTitle,
+  NotificationType,
+} from "../../libs/enums/notification.enum";
 
 @Injectable()
 export class PropertyService {
@@ -302,24 +311,28 @@ export class PropertyService {
 
     const member = await this.memberService.getMember(null, target.memberId);
 
+    const notificationInput: NotificationInput = {
+      authorId: memberId,
+      receiverId: member._id,
+      propertyId: likeRefId,
+      notificationGroup: NotificationGroup.PROPERTY,
+      notificationType: NotificationType.LIKE,
+      notifactionTitle: NotificationTitle.LIKE,
+    };
+
     // LIKE TOGGLE via Like Module
 
     const modifier: number = await this.likeService.toggleLike(input);
+
+    if (modifier === 1) {
+      await this.notificationService.notifyLike(notificationInput);
+    }
 
     const result = await this.propertyStatsEditor({
       _id: likeRefId,
       targetKey: "propertyLikes",
       modifier,
     });
-
-    if (result) {
-      await this.notificationService.notifyLike(
-        memberId,
-        member._id,
-        likeRefId,
-        null,
-      );
-    }
 
     if (!result)
       throw new InternalServerErrorException(Message.SOMETHING_WENT_WRONG);

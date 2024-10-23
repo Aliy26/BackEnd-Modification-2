@@ -5,7 +5,6 @@ import { UseGuards } from "@nestjs/common";
 import { AuthGuard } from "../auth/guards/auth.guard";
 import { AuthMember } from "../auth/decorators/authMember.decorator";
 import { ObjectId } from "mongoose";
-import { NotificationInput } from "../../libs/dto/notification/notification.input";
 import { shapeIntoMongoObjectId } from "../../libs/config";
 
 @Resolver()

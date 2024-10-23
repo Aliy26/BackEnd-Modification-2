@@ -9,6 +9,15 @@ registerEnumType(NotificationType, {
   name: "NotificationType",
 });
 
+export enum NotificationTitle {
+  LIKE = "NEW LIKE",
+  COMMENT = "NEW COMMENT",
+  FOLLOW = "NEW FOLLOW",
+}
+registerEnumType(NotificationTitle, {
+  name: "NotificationTitle",
+});
+
 export enum NotificationStatus {
   UNREAD = "UNREAD",
   READ = "READ",
