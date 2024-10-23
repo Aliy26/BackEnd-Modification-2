@@ -187,9 +187,9 @@ export class PropertyService {
               { $skip: (input.page - 1) * input.limit },
               { $limit: input.limit },
               lookupAuthMemberLiked(memberId),
-              {
-                $unwind: { preserveNullAndEmptyArrays: true, path: "$meLiked" },
-              },
+              // {
+              //   $unwind: { preserveNullAndEmptyArrays: true, path: "$meLiked" },
+              // },
               lookupMember,
               { $unwind: "$memberData" },
             ],
