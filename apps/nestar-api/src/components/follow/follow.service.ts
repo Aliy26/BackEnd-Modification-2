@@ -49,8 +49,6 @@ export class FollowService {
     if (!targetMember)
       throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
-    const result = await this.registerSubscription(followerId, followingId);
-
     const notificationInput: NotificationInput = {
       authorId: followerId,
       receiverId: followingId,
@@ -59,7 +57,9 @@ export class FollowService {
       notificationTitle: NotificationTitle.FOLLOW,
     };
 
-    await this.notificationService.notifyLike(notificationInput);
+    const result = await this.registerSubscription(followerId, followingId);
+
+    await this.notificationService.notifyMember(notificationInput);
 
     await this.memberService.memberStatsEditor({
       _id: followerId,
@@ -98,12 +98,21 @@ export class FollowService {
     if (!targetMember)
       throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
+    const input: NotificationInput = {
+      authorId: followerId,
+      receiverId: followingId,
+      notificationType: NotificationType.FOLLOW,
+    };
+
     const result = await this.followModel
       .findOneAndDelete({
         followingId: followingId,
         followerId: followerId,
       })
       .exec();
+
+    await this.notificationService.deleteNotification(input);
+
     if (!result) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
     await this.memberService.memberStatsEditor({

@@ -232,8 +232,11 @@ export class MemberService {
     const modifier: number = await this.likeService.toggleLike(input);
 
     if (modifier === 1) {
-      await this.notificationService.notifyLike(notificationInput);
+      await this.notificationService.notifyMember(notificationInput);
+    } else if (modifier === -1) {
+      await this.notificationService.deleteNotification(notificationInput);
     }
+
     const result = await this.memberStatsEditor({
       _id: likeRefId,
       targetKey: "memberLikes",
