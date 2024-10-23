@@ -23,4 +23,5 @@ export interface NotificationInput {
   notificationGroup?: NotificationGroup;
   notificationType?: NotificationType;
   notificationTitle?: NotificationTitle;
+  notificationDesc?: string;
 }

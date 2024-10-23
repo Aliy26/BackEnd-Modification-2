@@ -16,8 +16,14 @@ import { Comments, Comment } from "../../libs/dto/comment/comment";
 import { Direction, Message } from "../../libs/enums/common.enum";
 import { CommentGroup, CommentStatus } from "../../libs/enums/comment.enum";
 import { CommentUpdate } from "../../libs/dto/comment/comment.update";
-import { T } from "../../libs/types/common";
+import { NotificationInput, T } from "../../libs/types/common";
 import { lookupMember } from "../../libs/config";
+import { NotificationService } from "../notification/notification.service";
+import {
+  NotificationGroup,
+  NotificationTitle,
+  NotificationType,
+} from "../../libs/enums/notification.enum";
 
 @Injectable()
 export class CommentService {
@@ -26,6 +32,7 @@ export class CommentService {
     private readonly memberService: MemberService,
     private readonly propertyService: PropertyService,
     private readonly boardArticleService: BoardArticleService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   public async createComment(
@@ -35,6 +42,12 @@ export class CommentService {
     input.memberId = memberId;
 
     let result = null;
+    const notificationInput: NotificationInput = {
+      authorId: memberId,
+      receiverId: null,
+      notificationType: NotificationType.COMMENT,
+      notificationTitle: NotificationTitle.COMMENT,
+    };
     try {
       result = await this.commentModel.create(input);
     } catch (err) {
@@ -49,6 +62,15 @@ export class CommentService {
           targetKey: "propertyComments",
           modifier: 1,
         });
+        const agent = await this.memberService.getMember(
+          null,
+          input.commentRefId,
+        );
+        notificationInput.receiverId = agent._id;
+        notificationInput.notificationDesc = input.commentContent;
+        notificationInput.notificationGroup = NotificationGroup.PROPERTY;
+        await this.notificationService.notifyMember(notificationInput);
+
         break;
       case CommentGroup.ARTICLE:
         await this.boardArticleService.boardArticleStatsEditor({
@@ -56,12 +78,32 @@ export class CommentService {
           targetKey: "articleComments",
           modifier: 1,
         });
+        const article = await this.boardArticleService.getBoardArticle(
+          null,
+          input.commentRefId,
+        );
+        const writer = await this.memberService.getMember(
+          null,
+          article.memberId,
+        );
+        notificationInput.receiverId = writer._id;
+        notificationInput.articleId = article._id;
+        notificationInput.notificationDesc = input.commentContent;
+        notificationInput.notificationGroup = NotificationGroup.ARTICLE;
+
+        await this.notificationService.notifyMember(notificationInput);
+        break;
       case CommentGroup.MEMBER:
         await this.memberService.memberStatsEditor({
           _id: input.commentRefId,
           targetKey: "memberComments",
           modifier: 1,
         });
+
+        notificationInput.receiverId = input.commentRefId;
+        notificationInput.notificationDesc = input.commentContent;
+        notificationInput.notificationGroup = NotificationGroup.MEMBER;
+        await this.notificationService.notifyMember(notificationInput);
         break;
     }
 
@@ -110,6 +152,7 @@ export class CommentService {
             targetKey: "memberComments",
             modifier: -1,
           });
+
           break;
       }
     }

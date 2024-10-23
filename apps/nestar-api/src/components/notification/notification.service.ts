@@ -7,7 +7,6 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model, ObjectId } from "mongoose";
 import { Message } from "../../libs/enums/common.enum";
 import { Notification } from "../../libs/dto/notification/notification";
-import { NotificationStatus } from "../../libs/enums/notification.enum";
 import { NotificationInput } from "../../libs/types/common";
 
 @Injectable()

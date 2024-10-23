@@ -163,7 +163,7 @@ export class FollowService {
       .exec();
     if (!result.length)
       throw new InternalServerErrorException(Message.NO_DATA_FOUND);
-    console.log(result);
+
     return result[0];
   }
 
