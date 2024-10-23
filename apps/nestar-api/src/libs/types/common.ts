@@ -22,5 +22,5 @@ export interface NotificationInput {
   articleId?: ObjectId;
   notificationGroup?: NotificationGroup;
   notificationType?: NotificationType;
-  notifactionTitle?: NotificationTitle;
+  notificationTitle?: NotificationTitle;
 }

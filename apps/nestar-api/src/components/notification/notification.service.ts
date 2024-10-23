@@ -29,6 +29,7 @@ export class NotificationService {
       articleId,
       notificationGroup,
       notificationType,
+      notificationTitle,
     } = input;
     try {
       const exist = await this.notificationModel
@@ -42,6 +43,7 @@ export class NotificationService {
 
       if (!exist) {
         const input = {
+          notificationTitle,
           notificationType,
           notificationGroup,
           authorId,

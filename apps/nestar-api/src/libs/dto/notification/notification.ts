@@ -2,6 +2,7 @@ import { Field, InputType, ObjectType } from "@nestjs/graphql";
 import {
   NotificationGroup,
   NotificationStatus,
+  NotificationTitle,
   NotificationType,
 } from "../../enums/notification.enum";
 import { ObjectId } from "mongoose";
@@ -21,7 +22,7 @@ export class Notification {
   notificationGroup: NotificationGroup;
 
   @Field(() => String)
-  notificationTitle: string;
+  notificationTitle: NotificationTitle;
 
   @Field(() => String, { nullable: true })
   notificationDesc?: String;

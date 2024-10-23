@@ -317,7 +317,7 @@ export class PropertyService {
       propertyId: likeRefId,
       notificationGroup: NotificationGroup.PROPERTY,
       notificationType: NotificationType.LIKE,
-      notifactionTitle: NotificationTitle.LIKE,
+      notificationTitle: NotificationTitle.LIKE,
     };
 
     // LIKE TOGGLE via Like Module

@@ -226,10 +226,14 @@ export class MemberService {
       receiverId: likeRefId,
       notificationGroup: NotificationGroup.MEMBER,
       notificationType: NotificationType.LIKE,
-      notifactionTitle: NotificationTitle.LIKE,
+      notificationTitle: NotificationTitle.LIKE,
     };
 
     const modifier: number = await this.likeService.toggleLike(input);
+
+    if (modifier === 1) {
+      await this.notificationService.notifyLike(notificationInput);
+    }
     const result = await this.memberStatsEditor({
       _id: likeRefId,
       targetKey: "memberLikes",
@@ -238,9 +242,7 @@ export class MemberService {
 
     if (!result)
       throw new InternalServerErrorException(Message.SOMETHING_WENT_WRONG);
-    else if (result) {
-      await this.notificationService.notifyLike(notificationInput);
-    }
+
     return result;
   }
 

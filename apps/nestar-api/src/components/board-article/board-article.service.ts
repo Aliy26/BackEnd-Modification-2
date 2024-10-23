@@ -215,7 +215,7 @@ export class BoardArticleService {
       articleId: likeRefId,
       notificationGroup: NotificationGroup.ARTICLE,
       notificationType: NotificationType.LIKE,
-      notifactionTitle: NotificationTitle.LIKE,
+      notificationTitle: NotificationTitle.LIKE,
     };
     // LIKE TOGGLE via Like Module
 
