@@ -1,6 +1,9 @@
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { NotificationService } from "./notification.service";
-import { Notification } from "../../libs/dto/notification/notification";
+import {
+  Notification,
+  Notifications,
+} from "../../libs/dto/notification/notification";
 import { UseGuards } from "@nestjs/common";
 import { AuthGuard } from "../auth/guards/auth.guard";
 import { AuthMember } from "../auth/decorators/authMember.decorator";
@@ -12,12 +15,12 @@ export class NotificationResolver {
   constructor(private readonly notificationService: NotificationService) {}
 
   @UseGuards(AuthGuard)
-  @Query(() => [Notification])
+  @Query(() => Notifications)
   public async getNotifications(
-    @AuthMember("_id") memberId: ObjectId,
-  ): Promise<Notification[]> {
+    @AuthMember("_id") receiverId: ObjectId,
+  ): Promise<Notifications> {
     console.log("getNotifications");
-    return await this.notificationService.getNotifications(memberId);
+    return await this.notificationService.getNotifications(receiverId);
   }
 
   @UseGuards(AuthGuard)

@@ -62,15 +62,19 @@ export class CommentService {
           targetKey: "propertyComments",
           modifier: 1,
         });
-        const agent = await this.memberService.getMember(
+        const agentProperty = await this.propertyService.getProperty(
           null,
           input.commentRefId,
+        );
+        const agent = await this.memberService.getMember(
+          null,
+          agentProperty.memberId,
         );
         notificationInput.receiverId = agent._id;
         notificationInput.notificationDesc = input.commentContent;
         notificationInput.notificationGroup = NotificationGroup.PROPERTY;
-        await this.notificationService.notifyMember(notificationInput);
 
+        await this.notificationService.notifyMember(notificationInput);
         break;
       case CommentGroup.ARTICLE:
         await this.boardArticleService.boardArticleStatsEditor({
@@ -103,6 +107,7 @@ export class CommentService {
         notificationInput.receiverId = input.commentRefId;
         notificationInput.notificationDesc = input.commentContent;
         notificationInput.notificationGroup = NotificationGroup.MEMBER;
+
         await this.notificationService.notifyMember(notificationInput);
         break;
     }

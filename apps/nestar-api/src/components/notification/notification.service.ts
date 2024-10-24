@@ -6,8 +6,11 @@ import {
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, ObjectId } from "mongoose";
 import { Message } from "../../libs/enums/common.enum";
-import { Notification } from "../../libs/dto/notification/notification";
-import { NotificationInput } from "../../libs/types/common";
+import {
+  Notification,
+  Notifications,
+} from "../../libs/dto/notification/notification";
+import { NotificationInput, T } from "../../libs/types/common";
 
 @Injectable()
 export class NotificationService {
@@ -47,11 +50,50 @@ export class NotificationService {
     return result;
   }
 
-  public async getNotifications(memberId: ObjectId): Promise<Notification[]> {
+  public async getNotifications(receiverId: ObjectId): Promise<Notifications> {
+    const match: T = { receiverId: receiverId };
+
     const result = await this.notificationModel
-      .find({ receiverId: memberId })
+      .aggregate([
+        { $match: match },
+        {
+          $lookup: {
+            from: "members",
+            localField: "authorId",
+            foreignField: "_id",
+            as: "authorData",
+          },
+        },
+        { $unwind: "$authorData" },
+        {
+          $lookup: {
+            from: "properties",
+            localField: "propertyId",
+            foreignField: "_id",
+            as: "propertyData",
+          },
+        },
+        {
+          $unwind: { preserveNullAndEmptyArrays: true, path: "$propertyData" },
+        },
+        {
+          $lookup: {
+            from: "boardArticles",
+            localField: "articleId",
+            foreignField: "_id",
+            as: "articleData",
+          },
+        },
+        { $unwind: { preserveNullAndEmptyArrays: true, path: "$articleData" } },
+      ])
       .exec();
-    if (!result) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
-    return result;
+
+    const notifications = new Notifications();
+    notifications.list = result as Notification[];
+
+    if (!result.length)
+      throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+
+    return notifications;
   }
 }

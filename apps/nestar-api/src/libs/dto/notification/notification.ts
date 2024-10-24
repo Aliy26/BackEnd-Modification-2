@@ -6,6 +6,9 @@ import {
   NotificationType,
 } from "../../enums/notification.enum";
 import { ObjectId } from "mongoose";
+import { Member } from "../member/member";
+import { Property } from "../property/property";
+import { BoardArticle } from "../board-article/board-article";
 
 @ObjectType()
 export class Notification {
@@ -38,4 +41,21 @@ export class Notification {
 
   @Field(() => String, { nullable: true })
   articleId?: ObjectId;
+
+  // Retrieve from the aggregation
+
+  @Field(() => Member, { nullable: true })
+  authorData?: Member;
+
+  @Field(() => Property, { nullable: true })
+  propertyData?: Property;
+
+  @Field(() => BoardArticle, { nullable: true })
+  articleData?: BoardArticle;
+}
+
+@ObjectType()
+export class Notifications {
+  @Field(() => [Notification])
+  list: Notification[];
 }
