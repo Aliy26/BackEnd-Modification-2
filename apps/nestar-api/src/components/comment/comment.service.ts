@@ -71,6 +71,7 @@ export class CommentService {
           agentProperty.memberId,
         );
         notificationInput.receiverId = agent._id;
+        notificationInput.propertyId = input.commentRefId;
         notificationInput.notificationDesc = input.commentContent;
         notificationInput.notificationGroup = NotificationGroup.PROPERTY;
 

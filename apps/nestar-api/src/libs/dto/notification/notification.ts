@@ -42,6 +42,9 @@ export class Notification {
   @Field(() => String, { nullable: true })
   articleId?: ObjectId;
 
+  @Field(() => Date)
+  createdAt: Date;
+
   // Retrieve from the aggregation
 
   @Field(() => Member, { nullable: true })

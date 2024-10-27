@@ -24,6 +24,15 @@ export class NotificationResolver {
   }
 
   @UseGuards(AuthGuard)
+  @Query(() => [Notification])
+  public async getUnreadNotifications(
+    @AuthMember("_id") receiverId: ObjectId,
+  ): Promise<Notification[]> {
+    console.log("getUnreadNotifications");
+    return await this.notificationService.getUnreadNotifications(receiverId);
+  }
+
+  @UseGuards(AuthGuard)
   @Mutation(() => Notification)
   public async updateNotification(
     @Args("_id") input: string,
