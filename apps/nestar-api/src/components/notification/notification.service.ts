@@ -53,6 +53,7 @@ export class NotificationService {
   public async getNotifications(receiverId: ObjectId): Promise<Notifications> {
     const match: T = { receiverId: receiverId };
     const sort: T = { createdAt: -1 };
+    console.log("HHHHHHHHHHHHHHHHHHHHHHH");
 
     const result = await this.notificationModel
       .aggregate([
@@ -93,10 +94,6 @@ export class NotificationService {
     const notifications = new Notifications();
     notifications.list = result as Notification[];
 
-    if (!result.length) return null;
-
-    console.log(result.length);
-
     return notifications;
   }
 
@@ -106,7 +103,7 @@ export class NotificationService {
     const match: T = { receiverId: receiverId, notificationStatus: "UNREAD" };
     const result = await this.notificationModel.find(match).exec();
     if (!result) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
-    console.log(result.length);
+
     return result;
   }
 }

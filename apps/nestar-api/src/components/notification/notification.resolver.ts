@@ -9,6 +9,7 @@ import { AuthGuard } from "../auth/guards/auth.guard";
 import { AuthMember } from "../auth/decorators/authMember.decorator";
 import { ObjectId } from "mongoose";
 import { shapeIntoMongoObjectId } from "../../libs/config";
+import { WithoutGuard } from "../auth/guards/without.guard";
 
 @Resolver()
 export class NotificationResolver {
@@ -23,7 +24,7 @@ export class NotificationResolver {
     return await this.notificationService.getNotifications(receiverId);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(WithoutGuard)
   @Query(() => [Notification])
   public async getUnreadNotifications(
     @AuthMember("_id") receiverId: ObjectId,
