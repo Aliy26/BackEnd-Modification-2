@@ -7,7 +7,7 @@ import {
 } from "../../enums/notification.enum";
 import { ObjectId } from "mongoose";
 import { Member } from "../member/member";
-import { Property } from "../property/property";
+import { Product } from "../product/product";
 import { BoardArticle } from "../board-article/board-article";
 
 @ObjectType()
@@ -37,7 +37,7 @@ export class Notification {
   receiverId: ObjectId;
 
   @Field(() => String, { nullable: true })
-  propertyId?: ObjectId;
+  productId?: ObjectId;
 
   @Field(() => String, { nullable: true })
   articleId?: ObjectId;
@@ -50,8 +50,8 @@ export class Notification {
   @Field(() => Member, { nullable: true })
   authorData?: Member;
 
-  @Field(() => Property, { nullable: true })
-  propertyData?: Property;
+  @Field(() => Product, { nullable: true })
+  productData?: Product;
 
   @Field(() => BoardArticle, { nullable: true })
   articleData?: BoardArticle;

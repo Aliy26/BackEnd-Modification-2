@@ -28,6 +28,9 @@ export class Member {
   @Field(() => String)
   memberNick: string;
 
+  @Field(() => String, { nullable: true })
+  memberEmail?: string;
+
   memberPassword: string;
 
   @Field(() => String, { nullable: true })
@@ -46,7 +49,7 @@ export class Member {
   mainMember?: boolean;
 
   @Field(() => Int)
-  memberProperties: number;
+  memberProducts: number;
 
   @Field(() => Int)
   memberArticles: number;
@@ -93,7 +96,7 @@ export class Member {
   /** from aggregation **/
 
   @Field(() => [MeLiked], { nullable: true })
-  meLiked: MeLiked[];
+  meLiked?: MeLiked[];
 
   @Field(() => [MeFollowed], { nullable: true })
   meFollowed?: MeFollowed[];

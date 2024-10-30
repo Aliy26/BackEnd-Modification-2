@@ -18,7 +18,7 @@ export interface StatisticModifier {
 export interface NotificationInput {
   authorId: ObjectId;
   receiverId: ObjectId;
-  propertyId?: ObjectId;
+  productId?: ObjectId;
   articleId?: ObjectId;
   notificationGroup?: NotificationGroup;
   notificationType?: NotificationType;

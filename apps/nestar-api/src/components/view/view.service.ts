@@ -4,8 +4,8 @@ import { Model, ObjectId } from "mongoose";
 import { View } from "../../libs/dto/view/view";
 import { ViewInput } from "../../libs/dto/view/view.input";
 import { T } from "../../libs/types/common";
-import { OrdinaryInquiry } from "../../libs/dto/property/property.input";
-import { Properties } from "../../libs/dto/property/property";
+import { OrdinaryInquiry } from "../../libs/dto/product/product.input";
+import { Products } from "../../libs/dto/product/product";
 import { lookupVisit } from "../../libs/config";
 import { ViewGroup } from "../../libs/enums/view.enum";
 
@@ -28,12 +28,12 @@ export class ViewService {
     return result;
   }
 
-  public async getVisitedProperties(
+  public async getVisitedProducts(
     memberId: ObjectId,
     input: OrdinaryInquiry,
-  ): Promise<Properties> {
+  ): Promise<Products> {
     const { page, limit } = input;
-    const match: T = { viewGroup: ViewGroup.PROPERTY, memberId: memberId };
+    const match: T = { viewGroup: ViewGroup.PRODUCT, memberId: memberId };
 
     const data: T = await this.viewModel
       .aggregate([
@@ -41,28 +41,28 @@ export class ViewService {
         { $sort: { updatedAt: -1 } },
         {
           $lookup: {
-            from: "properties",
+            from: "products",
             localField: "viewRefId",
             foreignField: "_id",
-            as: "visitedProperty",
+            as: "visitedProduct",
           },
         },
-        { $unwind: "$visitedProperty" },
+        { $unwind: "$visitedProduct" },
         {
           $facet: {
             list: [
               { $skip: (page - 1) * limit },
               { $limit: limit },
               lookupVisit,
-              { $unwind: "$visitedProperty.memberData" },
+              { $unwind: "$visitedProduct.memberData" },
             ],
             metaCounter: [{ $count: "total" }],
           },
         },
       ])
       .exec();
-    const result: Properties = { list: [], metaCounter: data[0].metaCounter };
-    result.list = data[0].list.map((ele: T) => ele.visitedProperty);
+    const result: Products = { list: [], metaCounter: data[0].metaCounter };
+    result.list = data[0].list.map((ele: T) => ele.visitedProduct);
 
     return result;
   }

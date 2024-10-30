@@ -6,7 +6,7 @@ import {
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, ObjectId } from "mongoose";
 import { MemberService } from "../member/member.service";
-import { PropertyService } from "../property/property.service";
+import { ProductService } from "../product/product.service";
 import { BoardArticleService } from "../board-article/board-article.service";
 import {
   CommentInput,
@@ -30,7 +30,7 @@ export class CommentService {
   constructor(
     @InjectModel("Comment") private readonly commentModel: Model<Comment>,
     private readonly memberService: MemberService,
-    private readonly propertyService: PropertyService,
+    private readonly ProductService: ProductService,
     private readonly boardArticleService: BoardArticleService,
     private readonly notificationService: NotificationService,
   ) {}
@@ -56,24 +56,24 @@ export class CommentService {
     }
 
     switch (input.commentGroup) {
-      case CommentGroup.PROPERTY:
-        await this.propertyService.propertyStatsEditor({
+      case CommentGroup.PRODUCT:
+        await this.ProductService.productStatsEditor({
           _id: input.commentRefId,
-          targetKey: "propertyComments",
+          targetKey: "productComments",
           modifier: 1,
         });
-        const agentProperty = await this.propertyService.getProperty(
+        const agentProduct = await this.ProductService.getProduct(
           null,
           input.commentRefId,
         );
         const agent = await this.memberService.getMember(
           null,
-          agentProperty.memberId,
+          agentProduct.memberId,
         );
         notificationInput.receiverId = agent._id;
-        notificationInput.propertyId = input.commentRefId;
+        notificationInput.productId = input.commentRefId;
         notificationInput.notificationDesc = input.commentContent;
-        notificationInput.notificationGroup = NotificationGroup.PROPERTY;
+        notificationInput.notificationGroup = NotificationGroup.PRODUCT;
 
         await this.notificationService.notifyMember(notificationInput);
         break;
@@ -139,10 +139,10 @@ export class CommentService {
 
     if (result.commentStatus === CommentStatus.DELETE) {
       switch (result.commentGroup) {
-        case CommentGroup.PROPERTY:
-          await this.propertyService.propertyStatsEditor({
+        case CommentGroup.PRODUCT:
+          await this.ProductService.productStatsEditor({
             _id: result.commentRefId,
-            targetKey: "propertyComments",
+            targetKey: "productComments",
             modifier: -1,
           });
           break;
@@ -208,10 +208,10 @@ export class CommentService {
     if (!result) throw new InternalServerErrorException(Message.REMOVE_FAILED);
     if (result.commentStatus === CommentStatus.ACTIVE) {
       switch (result.commentGroup) {
-        case CommentGroup.PROPERTY:
-          await this.propertyService.propertyStatsEditor({
+        case CommentGroup.PRODUCT:
+          await this.ProductService.productStatsEditor({
             _id: result.commentRefId,
-            targetKey: "propertyComments",
+            targetKey: "productComments",
             modifier: -1,
           });
           break;

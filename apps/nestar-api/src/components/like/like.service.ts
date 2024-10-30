@@ -4,9 +4,9 @@ import { Like, MeLiked } from "../../libs/dto/like/like";
 import { Model, ObjectId } from "mongoose";
 import { LikeInput } from "../../libs/dto/like/like.input";
 import { T } from "../../libs/types/common";
-import { OrdinaryInquiry } from "../../libs/dto/property/property.input";
+import { OrdinaryInquiry } from "../../libs/dto/product/product.input";
 import { LikeGroup } from "../../libs/enums/like.enum";
-import { Properties } from "../../libs/dto/property/property";
+import { Products } from "../../libs/dto/product/product";
 import { lookupFavorite } from "../../libs/config";
 
 @Injectable()
@@ -42,12 +42,12 @@ export class LikeService {
       : [];
   }
 
-  public async getFavoriteProperties(
+  public async getFavoriteProducts(
     memberId: ObjectId,
     input: OrdinaryInquiry,
-  ): Promise<Properties> {
+  ): Promise<Products> {
     const { page, limit } = input;
-    const match: T = { likeGroup: LikeGroup.PROPERTY, memberId: memberId };
+    const match: T = { likeGroup: LikeGroup.PRODUCT, memberId: memberId };
 
     const data: T = await this.likeModel
       .aggregate([
@@ -55,28 +55,30 @@ export class LikeService {
         { $sort: { updatedAt: -1 } },
         {
           $lookup: {
-            from: "properties",
+            from: "products",
             localField: "likeRefId",
             foreignField: "_id",
-            as: "favoriteProperty",
+            as: "favoriteProduct",
           },
         },
-        { $unwind: "$favoriteProperty" },
+        { $unwind: "$favoriteProduct" },
         {
           $facet: {
             list: [
               { $skip: (page - 1) * limit },
               { $limit: limit },
               lookupFavorite,
-              { $unwind: "$favoriteProperty.memberData" },
+              { $unwind: "$favoriteProduct.memberData" },
             ],
             metaCounter: [{ $count: "total" }],
           },
         },
       ])
       .exec();
-    const result: Properties = { list: [], metaCounter: data[0].metaCounter };
-    result.list = data[0].list.map((ele: T) => ele.favoriteProperty);
+
+    console.log(data[0]);
+    const result: Products = { list: [], metaCounter: data[0].metaCounter };
+    result.list = data[0].list.map((ele: T) => ele.favoriteProduct);
 
     return result;
   }

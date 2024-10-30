@@ -6,7 +6,7 @@ import CommentSchema from "../../schemas/Comment.model";
 import { AuthModule } from "../auth/auth.module";
 import { MemberModule } from "../member/member.module";
 import { BoardArticleModule } from "../board-article/board-article.module";
-import { PropertyModule } from "../property/property.module";
+import { ProductModule } from "../product/product.module";
 import { NotificationModule } from "../notification/notification.module";
 
 @Module({
@@ -14,7 +14,7 @@ import { NotificationModule } from "../notification/notification.module";
     MongooseModule.forFeature([{ name: "Comment", schema: CommentSchema }]),
     AuthModule,
     MemberModule,
-    PropertyModule,
+    ProductModule,
     BoardArticleModule,
     NotificationModule,
   ],

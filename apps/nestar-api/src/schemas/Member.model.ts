@@ -31,6 +31,12 @@ const MemberSchema = new Schema(
       required: true,
     },
 
+    memberEmail: {
+      type: String,
+      index: { unique: true, sparse: true },
+      required: true,
+    },
+
     memberNick: {
       type: String,
       index: { unique: true, sparse: true },
@@ -60,7 +66,7 @@ const MemberSchema = new Schema(
       type: String,
     },
 
-    memberProperties: {
+    memberProducts: {
       type: Number,
       default: 0,
     },

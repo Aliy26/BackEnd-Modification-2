@@ -53,7 +53,6 @@ export class NotificationService {
   public async getNotifications(receiverId: ObjectId): Promise<Notifications> {
     const match: T = { receiverId: receiverId };
     const sort: T = { createdAt: -1 };
-    console.log("HHHHHHHHHHHHHHHHHHHHHHH");
 
     const result = await this.notificationModel
       .aggregate([
@@ -70,14 +69,14 @@ export class NotificationService {
         { $unwind: "$authorData" },
         {
           $lookup: {
-            from: "properties",
-            localField: "propertyId",
+            from: "products",
+            localField: "productId",
             foreignField: "_id",
-            as: "propertyData",
+            as: "productData",
           },
         },
         {
-          $unwind: { preserveNullAndEmptyArrays: true, path: "$propertyData" },
+          $unwind: { preserveNullAndEmptyArrays: true, path: "$productData" },
         },
         {
           $lookup: {
@@ -95,15 +94,5 @@ export class NotificationService {
     notifications.list = result as Notification[];
 
     return notifications;
-  }
-
-  public async getUnreadNotifications(
-    receiverId: ObjectId,
-  ): Promise<Notification[]> {
-    const match: T = { receiverId: receiverId, notificationStatus: "UNREAD" };
-    const result = await this.notificationModel.find(match).exec();
-    if (!result) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
-
-    return result;
   }
 }
