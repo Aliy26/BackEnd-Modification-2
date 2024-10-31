@@ -22,6 +22,7 @@ export class NotificationService {
   public async notifyMember(input: NotificationInput): Promise<Notification> {
     try {
       {
+        if (input.receiverId.toString() === String(input.authorId)) return;
         const result = await this.notificationModel.create(input);
         if (!result) return null;
         return result;
@@ -47,6 +48,7 @@ export class NotificationService {
         { new: true },
       )
       .exec();
+    if (!result) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
     return result;
   }
 

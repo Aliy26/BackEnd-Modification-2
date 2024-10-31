@@ -28,14 +28,14 @@ registerEnumType(ProductBrand, {
 
 export enum ProductCategory {
   LivingRoom = "Living Room",
-  BUSAN = "BUSAN",
-  INCHEON = "INCHEON",
-  DAEGU = "DAEGU",
-  GYEONGJU = "GYEONGJU",
-  GWANGJU = "GWANGJU",
-  CHONJU = "CHONJU",
-  DAEJON = "DAEJON",
-  JEJU = "JEJU",
+  Bedroom = "Bedroom",
+  Kitchen = "Kitchen",
+  Kids = "Baby & Kids",
+  Appliances = "Appliances",
+  Pet = "Pet",
+  Outdoors = "Outdoors",
+  Lightning = "Lightning",
+  Decor = "Decor & Pillows",
 }
 registerEnumType(ProductCategory, {
   name: "productCategory",

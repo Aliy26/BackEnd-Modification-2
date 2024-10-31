@@ -59,14 +59,14 @@ export class Product {
   @Field(() => String)
   memberId: ObjectId;
 
+  @Field(() => Int, { nullable: true })
+  manufacturedIn?: number;
+
   @Field(() => Date, { nullable: true })
   soldAt?: Date;
 
   @Field(() => Date, { nullable: true })
   deletedAt?: Date;
-
-  @Field(() => Int, { nullable: true })
-  manufacturedIn?: number;
 
   @Field(() => Date)
   createdAt: Date;

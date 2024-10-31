@@ -125,44 +125,6 @@ export class ProductService {
       .exec();
   }
 
-  public async updateProduct(
-    memberId: ObjectId,
-    input: ProductUpdate,
-  ): Promise<Product> {
-    let { productStatus, soldAt, deletedAt } = input;
-    const search: T = {
-      _id: input._id,
-      memberId: memberId,
-      productStatus: ProductStatus.ACTIVE,
-    };
-
-    if (productStatus === ProductStatus.SOLD) {
-      soldAt = moment().toDate();
-      input.soldAt = soldAt;
-    } else if (productStatus === ProductStatus.DELETE) {
-      deletedAt = moment().toDate();
-      input.deletedAt = deletedAt;
-    }
-
-    const result = await this.productModel
-      .findOneAndUpdate(search, input, {
-        new: true,
-      })
-      .lean()
-      .exec();
-    if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
-
-    if (soldAt || deletedAt) {
-      await this.memberService.memberStatsEditor({
-        _id: memberId,
-        targetKey: "memberProducts",
-        modifier: -1,
-      });
-    }
-
-    return result;
-  }
-
   public async getProducts(
     memberId: ObjectId,
     input: ProductsInquiry,
@@ -229,6 +191,44 @@ export class ProductService {
         return { [ele]: true };
       });
     }
+  }
+
+  public async updateProduct(
+    memberId: ObjectId,
+    input: ProductUpdate,
+  ): Promise<Product> {
+    let { productStatus, soldAt, deletedAt } = input;
+    const search: T = {
+      _id: input._id,
+      memberId: memberId,
+      productStatus: ProductStatus.ACTIVE,
+    };
+
+    if (productStatus === ProductStatus.SOLD) {
+      soldAt = moment().toDate();
+      input.soldAt = soldAt;
+    } else if (productStatus === ProductStatus.DELETE) {
+      deletedAt = moment().toDate();
+      input.deletedAt = deletedAt;
+    }
+
+    const result = await this.productModel
+      .findOneAndUpdate(search, input, {
+        new: true,
+      })
+      .lean()
+      .exec();
+    if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
+
+    if (soldAt || deletedAt) {
+      await this.memberService.memberStatsEditor({
+        _id: memberId,
+        targetKey: "memberProducts",
+        modifier: -1,
+      });
+    }
+
+    return result;
   }
 
   public async getFavorites(

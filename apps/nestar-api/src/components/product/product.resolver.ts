@@ -46,6 +46,16 @@ export class ProductResolver {
     return await this.productService.getProduct(memberId, productId);
   }
 
+  @UseGuards(WithoutGuard)
+  @Query((returns) => Products)
+  public async getProducts(
+    @Args("input") input: ProductsInquiry,
+    @AuthMember("_id") memberId: ObjectId,
+  ): Promise<Products> {
+    console.log("Query: getProducts");
+    return await this.productService.getProducts(memberId, input);
+  }
+
   @Roles(MemberType.AGENT)
   @UseGuards(RolesGuard)
   @Mutation((returns) => Product)
@@ -56,16 +66,6 @@ export class ProductResolver {
     console.log("Mutation: updateProduct");
     input._id = shapeIntoMongoObjectId(input._id);
     return await this.productService.updateProduct(memberId, input);
-  }
-
-  @UseGuards(WithoutGuard)
-  @Query((returns) => Products)
-  public async getProducts(
-    @Args("input") input: ProductsInquiry,
-    @AuthMember("_id") memberId: ObjectId,
-  ): Promise<Products> {
-    console.log("Query: getProducts");
-    return await this.productService.getProducts(memberId, input);
   }
 
   @UseGuards(AuthGuard)
