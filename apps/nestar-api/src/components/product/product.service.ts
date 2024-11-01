@@ -165,18 +165,9 @@ export class ProductService {
   }
 
   private shapeMatchQuery(match: T, input: ProductsInquiry): void {
-    const {
-      memberId,
-      locationList,
-      typeList,
-      periodsRange,
-      pricesRange,
-      options,
-      text,
-    } = input.search;
+    const { memberId, typeList, periodsRange, pricesRange, options, text } =
+      input.search;
     if (memberId) match.memberId = shapeIntoMongoObjectId(memberId);
-    if (locationList && locationList.length)
-      match.productCategory = { $in: locationList };
 
     if (typeList && typeList.length) match.productType = { $in: typeList };
 

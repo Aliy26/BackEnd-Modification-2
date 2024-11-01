@@ -9,7 +9,6 @@ import { AuthGuard } from "../auth/guards/auth.guard";
 import { AuthMember } from "../auth/decorators/authMember.decorator";
 import { ObjectId } from "mongoose";
 import { shapeIntoMongoObjectId } from "../../libs/config";
-import { WithoutGuard } from "../auth/guards/without.guard";
 
 @Resolver()
 export class NotificationResolver {

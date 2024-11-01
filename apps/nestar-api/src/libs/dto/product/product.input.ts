@@ -90,7 +90,7 @@ class PISearch {
 
   @IsOptional()
   @Field(() => [ProductCategory], { nullable: true })
-  locationList?: ProductCategory[];
+  productCategory?: ProductCategory[];
 
   @IsOptional()
   @Field(() => [ProductType], { nullable: true })
