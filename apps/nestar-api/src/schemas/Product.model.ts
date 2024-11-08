@@ -118,7 +118,13 @@ const ProductSchema = new Schema(
 );
 
 ProductSchema.index(
-  { productType: 1, productCategory: 1, productName: 1, productPrice: 1 },
+  {
+    productType: 1,
+    productCategory: 1,
+    productName: 1,
+    productBrand: 1,
+    productPrice: 1,
+  },
   { unique: true },
 );
 
