@@ -176,6 +176,7 @@ export class MemberService {
     const match: T = {
       memberType: MemberType.AGENT,
       memberStatus: MemberStatus.ACTIVE,
+      // memberEmail: { $exists: true, $ne: "" }, // queries only the agents with the truthy memberEmail dataset
     };
     const sort: T = {
       [input?.sort ?? "createdAt"]: input?.direction ?? Direction.DESC,

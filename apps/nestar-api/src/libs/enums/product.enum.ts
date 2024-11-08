@@ -30,12 +30,13 @@ export enum ProductCategory {
   LivingRoom = "Living Room",
   Bedroom = "Bedroom",
   Kitchen = "Kitchen",
-  Kids = "Baby & Kids",
+  Work = "Work",
+  Kids = "Kids",
   Appliances = "Appliances",
   Pet = "Pet",
   Outdoors = "Outdoors",
   Lightning = "Lightning",
-  Decor = "Decor & Pillows",
+  Pillows = "Pillows",
 }
 registerEnumType(ProductCategory, {
   name: "productCategory",

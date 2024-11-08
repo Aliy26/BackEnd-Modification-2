@@ -33,6 +33,9 @@ export class Product {
   productPrice: number;
 
   @Field(() => Int)
+  discountedPrice: number;
+
+  @Field(() => Int)
   productViews: number;
 
   @Field(() => Int)
