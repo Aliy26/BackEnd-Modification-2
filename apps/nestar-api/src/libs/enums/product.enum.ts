@@ -36,7 +36,6 @@ export enum ProductCategory {
   Pet = "Pet",
   Outdoors = "Outdoors",
   Lightning = "Lightning",
-  Pillows = "Pillows",
 }
 registerEnumType(ProductCategory, {
   name: "productCategory",
