@@ -36,6 +36,11 @@ const ProductSchema = new Schema(
       required: true,
     },
 
+    productStock: {
+      type: Number,
+      required: true,
+    },
+
     productBrand: {
       type: String,
       enum: ProductBrand,
@@ -53,11 +58,6 @@ const ProductSchema = new Schema(
     },
 
     productComments: {
-      type: Number,
-      default: 0,
-    },
-
-    productStock: {
       type: Number,
       default: 0,
     },

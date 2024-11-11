@@ -179,6 +179,7 @@ export class ProductService {
       typeList,
       categoryList,
       discountedPrice,
+      productStock,
       periodsRange,
       pricesRange,
       options,
@@ -186,7 +187,8 @@ export class ProductService {
     } = input.search;
     // memberEmail: { $exists: true, $ne: "" }, // queries only the agents with the truthy memberEmail dataset
     if (memberId) match.memberId = shapeIntoMongoObjectId(memberId);
-    if (discountedPrice) match.discountedPrice = { $exists: true, $ne: 0 };
+    if (discountedPrice) match.discountedPrice = { $gt: 0 };
+    if (productStock) match.productStock = { $lte: 30, $ne: 0 };
     if (typeList && typeList.length) match.productType = { $in: typeList };
     if (categoryList && categoryList.length)
       match.productCategory = { $in: categoryList };

@@ -97,6 +97,10 @@ class PISearch {
   discountedPrice?: boolean;
 
   @IsOptional()
+  @Field(() => Boolean, { nullable: true })
+  productStock?: boolean;
+
+  @IsOptional()
   @Field(() => [ProductType], { nullable: true })
   typeList?: ProductType[];
 

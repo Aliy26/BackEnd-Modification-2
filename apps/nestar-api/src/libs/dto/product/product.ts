@@ -35,6 +35,9 @@ export class Product {
   @Field(() => Int)
   discountedPrice: number;
 
+  @Field(() => Int, { nullable: true })
+  productStock?: number;
+
   @Field(() => Int)
   productViews: number;
 
