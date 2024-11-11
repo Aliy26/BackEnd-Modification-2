@@ -93,6 +93,10 @@ class PISearch {
   categoryList?: ProductCategory[];
 
   @IsOptional()
+  @Field(() => Boolean, { nullable: true })
+  discountedPrice?: boolean;
+
+  @IsOptional()
   @Field(() => [ProductType], { nullable: true })
   typeList?: ProductType[];
 

@@ -211,6 +211,8 @@ export class MemberService {
     if (!result.length)
       throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
+    console.log(result[0]);
+
     return result[0];
   }
 

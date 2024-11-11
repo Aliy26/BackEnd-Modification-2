@@ -39,11 +39,14 @@ import {
   NotificationTitle,
   NotificationType,
 } from "../../libs/enums/notification.enum";
+import { Follower, Following } from "../../libs/dto/follow/follow";
 
 @Injectable()
 export class ProductService {
   constructor(
     @InjectModel("Product") private readonly productModel: Model<Product>,
+    @InjectModel("Follow")
+    private readonly followModel: Model<Follower | Following>,
     private readonly memberService: MemberService,
     private readonly viewService: ViewService,
     private readonly likeService: LikeService,
@@ -58,6 +61,12 @@ export class ProductService {
         targetKey: "memberProducts",
         modifier: 1,
       });
+      const receiverId = await this.followModel.find({
+        followingId: result.memberId,
+      });
+
+      console.log(receiverId, "<<<");
+
       return result;
     } catch (err) {
       console.log("Error, Service.model", err);
@@ -169,13 +178,15 @@ export class ProductService {
       memberId,
       typeList,
       categoryList,
+      discountedPrice,
       periodsRange,
       pricesRange,
       options,
       text,
     } = input.search;
+    // memberEmail: { $exists: true, $ne: "" }, // queries only the agents with the truthy memberEmail dataset
     if (memberId) match.memberId = shapeIntoMongoObjectId(memberId);
-
+    if (discountedPrice) match.discountedPrice = { $exists: true, $ne: 0 };
     if (typeList && typeList.length) match.productType = { $in: typeList };
     if (categoryList && categoryList.length)
       match.productCategory = { $in: categoryList };
