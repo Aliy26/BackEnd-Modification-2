@@ -27,7 +27,6 @@ const NotificationSchema = new Schema(
 
     notificationTitle: {
       type: String,
-      required: true,
     },
 
     notificationDesc: {

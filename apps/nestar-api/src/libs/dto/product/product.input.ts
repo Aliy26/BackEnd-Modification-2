@@ -37,6 +37,10 @@ export class ProductInput {
   productPrice: number;
 
   @IsNotEmpty()
+  @Field(() => Int)
+  productStock: number;
+
+  @IsNotEmpty()
   @Field(() => String)
   productBrand: ProductBrand;
 

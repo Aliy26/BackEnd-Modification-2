@@ -107,6 +107,19 @@ export class MemberService {
     return result;
   }
 
+  public async deleteImage(
+    memberId: ObjectId,
+    input: MemberUpdate,
+  ): Promise<Member> {
+    if (input.memberImage) {
+      const result: Member = await this.memberModel
+        .findByIdAndUpdate(memberId, { memberImage: "" }, { new: true })
+        .exec();
+      result.accessToken = await this.authService.createToken(result);
+      return result;
+    }
+  }
+
   public async getMember(
     memberId: ObjectId,
     targetId: ObjectId,

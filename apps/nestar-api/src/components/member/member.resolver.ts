@@ -51,6 +51,18 @@ export class MemberResolver {
     delete input._id;
     return await this.memberService.updateMember(memberId, input);
   }
+
+  @UseGuards(AuthGuard)
+  @Mutation(() => Member)
+  public async deleteImage(
+    @Args("input") input: MemberUpdate,
+    @AuthMember("_id") memberId: ObjectId,
+  ): Promise<Member> {
+    console.log("Mutation: deleteImage");
+    delete input._id;
+    return await this.memberService.deleteImage(memberId, input);
+  }
+
   @UseGuards(WithoutGuard)
   @Query(() => Member)
   public async getMember(

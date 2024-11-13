@@ -40,6 +40,8 @@ import {
   NotificationType,
 } from "../../libs/enums/notification.enum";
 import { Follower, Following } from "../../libs/dto/follow/follow";
+import { Member } from "../../libs/dto/member/member";
+import { Notification } from "../../libs/dto/notification/notification";
 
 @Injectable()
 export class ProductService {
@@ -61,11 +63,25 @@ export class ProductService {
         targetKey: "memberProducts",
         modifier: 1,
       });
-      const receiverId = await this.followModel.find({
-        followingId: result.memberId,
-      });
 
-      console.log(receiverId, "<<<");
+      const agent = await this.memberService.getMember(null, result.memberId);
+
+      if (agent.memberFollowers > 0) {
+        const followers = await this.followModel.find({
+          followingId: result.memberId,
+        });
+
+        const notifyFollowers = followers.map(async (follower: Follower) => {
+          const input: NotificationInput = {
+            authorId: result.memberId,
+            receiverId: follower.followerId,
+            productId: result._id,
+            notificationGroup: NotificationGroup.PRODUCT,
+            notificationType: NotificationType.NEW_PRODUCT,
+          };
+          await this.notificationService.notifyMember(input);
+        });
+      }
 
       return result;
     } catch (err) {

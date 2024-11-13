@@ -24,8 +24,8 @@ export class Notification {
   @Field(() => String)
   notificationGroup: NotificationGroup;
 
-  @Field(() => String)
-  notificationTitle: NotificationTitle;
+  @Field(() => String, { nullable: true })
+  notificationTitle?: NotificationTitle;
 
   @Field(() => String, { nullable: true })
   notificationDesc?: String;
