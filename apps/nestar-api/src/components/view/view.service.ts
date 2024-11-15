@@ -42,8 +42,19 @@ export class ViewService {
         {
           $lookup: {
             from: "products",
-            localField: "viewRefId",
-            foreignField: "_id",
+            let: { productId: "$viewRefId" },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ["$_id", "$$productId"] },
+                      { $eq: ["$productStatus", "ACTIVE"] },
+                    ],
+                  },
+                },
+              },
+            ],
             as: "visitedProduct",
           },
         },

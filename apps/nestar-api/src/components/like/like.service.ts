@@ -8,6 +8,7 @@ import { OrdinaryInquiry } from "../../libs/dto/product/product.input";
 import { LikeGroup } from "../../libs/enums/like.enum";
 import { Products } from "../../libs/dto/product/product";
 import { lookupFavorite } from "../../libs/config";
+import { ProductStatus } from "../../libs/enums/product.enum";
 
 @Injectable()
 export class LikeService {
@@ -47,7 +48,10 @@ export class LikeService {
     input: OrdinaryInquiry,
   ): Promise<Products> {
     const { page, limit } = input;
-    const match: T = { likeGroup: LikeGroup.PRODUCT, memberId: memberId };
+    const match: T = {
+      likeGroup: LikeGroup.PRODUCT,
+      memberId: memberId,
+    };
 
     const data: T = await this.likeModel
       .aggregate([
@@ -56,8 +60,19 @@ export class LikeService {
         {
           $lookup: {
             from: "products",
-            localField: "likeRefId",
-            foreignField: "_id",
+            let: { productId: "$likeRefId" },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ["$_id", "$$productId"] },
+                      { $eq: ["$productStatus", "ACTIVE"] },
+                    ],
+                  },
+                },
+              },
+            ],
             as: "favoriteProduct",
           },
         },

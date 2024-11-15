@@ -36,6 +36,10 @@ export class ProductUpdate {
 
   @IsOptional()
   @Field(() => Int, { nullable: true })
+  productStock?: number;
+
+  @IsOptional()
+  @Field(() => Int, { nullable: true })
   discountedPrice?: number;
 
   @IsOptional()
