@@ -8,6 +8,7 @@ import { MemberModule } from "../member/member.module";
 import { ViewModule } from "../view/view.module";
 import { LikeModule } from "../like/like.module";
 import { NotificationModule } from "../notification/notification.module";
+import FollowSchema from "../../schemas/Follow.model";
 
 @Module({
   imports: [
@@ -15,6 +16,12 @@ import { NotificationModule } from "../notification/notification.module";
       {
         name: "BoardArticle",
         schema: BoardArticleSchema,
+      },
+    ]),
+    MongooseModule.forFeature([
+      {
+        name: "Follow",
+        schema: FollowSchema,
       },
     ]),
     AuthModule,

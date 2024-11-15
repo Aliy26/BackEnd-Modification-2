@@ -39,12 +39,15 @@ import {
   NotificationTitle,
   NotificationType,
 } from "../../libs/enums/notification.enum";
+import { Follower, Following } from "../../libs/dto/follow/follow";
 
 @Injectable()
 export class BoardArticleService {
   constructor(
     @InjectModel("BoardArticle")
     private readonly boardArticleModel: Model<BoardArticle>,
+    @InjectModel("Follow")
+    private readonly followModel: Model<Follower | Following>,
     private readonly memberService: MemberService,
     private readonly viewService: ViewService,
     private readonly likeService: LikeService,
@@ -63,6 +66,25 @@ export class BoardArticleService {
         targetKey: "memberArticles",
         modifier: 1,
       });
+
+      const agent = await this.memberService.getMember(null, result.memberId);
+
+      if (agent.memberFollowers === 0) return result;
+
+      const followers = await this.followModel
+        .find({ followingId: agent._id })
+        .exec();
+
+      const notifications = followers.map((followers) => ({
+        authorId: agent._id,
+        receiverId: followers.followerId,
+        articleId: result._id,
+        notificationGroup: NotificationGroup.ARTICLE,
+        notificationType: NotificationType.NEW_ARTICLE,
+      }));
+
+      await this.notificationService.notifyFollowers(notifications);
+
       return result;
     } catch (err) {
       console.log("Error, Service.model", err.message);

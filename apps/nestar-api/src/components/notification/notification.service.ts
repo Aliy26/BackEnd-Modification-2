@@ -52,6 +52,10 @@ export class NotificationService {
     return result;
   }
 
+  public async notifyFollowers(input: NotificationInput[]): Promise<void> {
+    await this.notificationModel.insertMany(input);
+  }
+
   public async getNotifications(receiverId: ObjectId): Promise<Notifications> {
     const match: T = { receiverId: receiverId };
     const sort: T = { createdAt: -1 };

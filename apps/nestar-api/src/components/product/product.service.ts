@@ -66,22 +66,22 @@ export class ProductService {
 
       const agent = await this.memberService.getMember(null, result.memberId);
 
-      if (agent.memberFollowers > 0) {
-        const followers = await this.followModel.find({
+      if (agent.memberFollowers === 0) return result;
+      const followers = await this.followModel
+        .find({
           followingId: result.memberId,
-        });
+        })
+        .exec();
 
-        const notifyFollowers = followers.map(async (follower: Follower) => {
-          const input: NotificationInput = {
-            authorId: result.memberId,
-            receiverId: follower.followerId,
-            productId: result._id,
-            notificationGroup: NotificationGroup.PRODUCT,
-            notificationType: NotificationType.NEW_PRODUCT,
-          };
-          await this.notificationService.notifyMember(input);
-        });
-      }
+      const notifications = followers.map((follower: Follower) => ({
+        authorId: result.memberId,
+        receiverId: follower.followerId,
+        productId: result._id,
+        notificationGroup: NotificationGroup.PRODUCT,
+        notificationType: NotificationType.NEW_PRODUCT,
+      }));
+
+      await this.notificationService.notifyFollowers(notifications);
 
       return result;
     } catch (err) {
