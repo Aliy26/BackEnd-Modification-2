@@ -20,7 +20,7 @@ import {
   StatisticModifier,
   T,
 } from "../../libs/types/common";
-import { ProductCategory, ProductStatus } from "../../libs/enums/product.enum";
+import { ProductStatus } from "../../libs/enums/product.enum";
 import { ViewGroup } from "../../libs/enums/view.enum";
 import { ViewService } from "../view/view.service";
 import { ProductUpdate } from "../../libs/dto/product/product.update";
@@ -200,18 +200,23 @@ export class ProductService {
       pricesRange,
       options,
       text,
+      productBrand,
     } = input.search;
     // memberEmail: { $exists: true, $ne: "" }, // queries only the agents with the truthy memberEmail dataset
     if (memberId) match.memberId = shapeIntoMongoObjectId(memberId);
     if (discountedPrice) match.discountedPrice = { $gt: 0 };
     if (productStock) match.productStock = { $lte: 30, $ne: 0 };
     if (typeList && typeList.length) match.productType = { $in: typeList };
+    if (productBrand) match.productBrand = productBrand;
     if (categoryList && categoryList.length)
       match.productCategory = { $in: categoryList };
     if (pricesRange)
       match.productPrice = { $gte: pricesRange.start, $lte: pricesRange.end };
     if (periodsRange)
-      match.createdAt = { $gte: periodsRange.start, $lte: periodsRange.end };
+      match.manufacturedIn = {
+        $gte: periodsRange.start,
+        $lte: periodsRange.end,
+      };
     if (text) match.productName = { $regex: new RegExp(text, "i") };
     if (options && options.length) {
       match["$or"] = options.map((ele) => {

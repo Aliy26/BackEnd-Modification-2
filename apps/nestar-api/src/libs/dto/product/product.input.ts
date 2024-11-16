@@ -79,11 +79,11 @@ export class PricesRange {
 
 @InputType()
 export class PeriodRange {
-  @Field(() => Date)
-  start: Date;
+  @Field(() => Int)
+  start: number;
 
-  @Field(() => Date)
-  end: Date;
+  @Field(() => Int)
+  end: number;
 }
 
 @InputType()
@@ -107,6 +107,10 @@ class PISearch {
   @IsOptional()
   @Field(() => [ProductType], { nullable: true })
   typeList?: ProductType[];
+
+  @IsOptional()
+  @Field(() => ProductBrand, { nullable: true })
+  productBrand?: ProductBrand;
 
   @IsOptional()
   @IsIn(availableOptions, { each: true })

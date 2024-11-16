@@ -9,6 +9,10 @@ const NoticeSchema = new Schema(
       required: true,
     },
 
+    field: {
+      type: String,
+    },
+
     noticeStatus: {
       type: String,
       enum: NoticeStatus,
@@ -28,6 +32,10 @@ const NoticeSchema = new Schema(
     noticeImage: {
       type: String,
       default: "",
+    },
+
+    eventCity: {
+      type: String,
     },
 
     memberId: {

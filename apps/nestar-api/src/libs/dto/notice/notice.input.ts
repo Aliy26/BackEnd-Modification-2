@@ -1,6 +1,10 @@
 import { Field, InputType } from "@nestjs/graphql";
-import { isNotEmpty, IsNotEmpty, IsOptional, Length } from "class-validator";
-import { NoticeCategory, NoticeStatus } from "../../enums/notice.enum";
+import { IsNotEmpty, IsOptional, Length } from "class-validator";
+import {
+  FAQFeild,
+  NoticeCategory,
+  NoticeStatus,
+} from "../../enums/notice.enum";
 import { ObjectId } from "mongoose";
 
 @InputType()
@@ -20,11 +24,15 @@ export class NoticeInput {
   noticeCategory: NoticeCategory;
 
   @IsOptional()
-  @Field(() => String)
+  @Field(() => FAQFeild, { nullable: true })
+  field?: FAQFeild;
+
+  @IsOptional()
+  @Field(() => String, { nullable: true })
   eventCity?: string;
 
   @IsOptional()
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   noticeImage?: string;
 
   memberId?: ObjectId;
@@ -38,5 +46,5 @@ export class EventNoticeInquiry {
 
   @IsNotEmpty()
   @Field(() => String)
-  noticeStatus: NoticeStatus.ACTIVE;
+  noticeStatus: NoticeStatus;
 }

@@ -10,6 +10,19 @@ registerEnumType(NoticeCategory, {
   name: "NoticeCategory",
 });
 
+export enum FAQFeild {
+  PRODUCT = "PRODUCT",
+  BUYERS = "BUYERS",
+  AGENT = "AGENT",
+  PAYMENT = "PAYMENT",
+  MEMBERSHIP = "MEMBERSHIP",
+  COMMUNITY = "COMMUNITY",
+  OTHER = "OTHER",
+}
+registerEnumType(FAQFeild, {
+  name: "FAQFeild",
+});
+
 export enum NoticeStatus {
   HOLD = "HOLD",
   ACTIVE = "ACTIVE",
