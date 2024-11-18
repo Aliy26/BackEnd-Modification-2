@@ -13,6 +13,7 @@ import {
 } from "../../libs/dto/notice/notice.input";
 import { NoticeUpdate } from "../../libs/dto/notice/notice.update";
 import { WithoutGuard } from "../auth/guards/without.guard";
+import { FAQFeild } from "../../libs/enums/notice.enum";
 
 @Resolver()
 export class NoticeResolver {
@@ -25,6 +26,15 @@ export class NoticeResolver {
   ): Promise<Notice[]> {
     console.log("Query: getNotices");
     return await this.noticeService.getNotices(input);
+  }
+
+  @UseGuards(WithoutGuard)
+  @Query(() => [String])
+  public async getNoticeFields(
+    @Args("input") input: boolean,
+  ): Promise<FAQFeild[]> {
+    console.log("Query: getNoticeFields");
+    return await this.noticeService.getNoticeFields(input);
   }
 
   @Roles(MemberType.ADMIN)

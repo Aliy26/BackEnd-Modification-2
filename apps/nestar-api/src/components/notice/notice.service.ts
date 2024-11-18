@@ -9,6 +9,8 @@ import {
 } from "../../libs/dto/notice/notice.input";
 import { NoticeUpdate } from "../../libs/dto/notice/notice.update";
 import { T } from "../../libs/types/common";
+import { FAQFeild, NoticeStatus } from "../../libs/enums/notice.enum";
+import { group } from "console";
 
 @Injectable()
 export class NoticeService {
@@ -19,6 +21,7 @@ export class NoticeService {
 
   public async getNotices(input: EventNoticeInquiry): Promise<Notice[]> {
     const result = await this.noticeModel.find(input);
+
     if (!result) return null;
     return result;
   }
@@ -43,5 +46,31 @@ export class NoticeService {
       .findByIdAndUpdate(input._id, input, { new: true })
       .exec();
     return result;
+  }
+
+  public async getNoticeFields(input: boolean): Promise<FAQFeild[]> {
+    const result = await this.noticeModel.aggregate([
+      {
+        $match: {
+          noticeStatus: NoticeStatus.ACTIVE,
+          field: {
+            $exists: true,
+            $ne: null,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: "$field",
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          field: "$_id",
+        },
+      },
+    ]);
+    return result.map((item) => item.field).sort();
   }
 }

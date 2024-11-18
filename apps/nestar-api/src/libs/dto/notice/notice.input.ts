@@ -41,10 +41,10 @@ export class NoticeInput {
 @InputType()
 export class EventNoticeInquiry {
   @IsOptional()
-  @Field(() => NoticeCategory, { nullable: true })
-  noticeCategory?: NoticeCategory.EVENT;
+  @Field(() => NoticeCategory)
+  noticeCategory: NoticeCategory;
 
-  @IsNotEmpty()
-  @Field(() => String)
-  noticeStatus: NoticeStatus;
+  @IsOptional()
+  @Field(() => String, { nullable: true })
+  noticeStatus?: NoticeStatus;
 }
