@@ -4,16 +4,18 @@ import { Roles } from "../auth/decorators/roles.decorator";
 import { MemberType } from "../../libs/enums/member.enum";
 import { UseGuards } from "@nestjs/common";
 import { RolesGuard } from "../auth/guards/roles.guard";
-import { Notice } from "../../libs/dto/notice/notice";
+import { Notice, Notices } from "../../libs/dto/notice/notice";
 import { AuthMember } from "../auth/decorators/authMember.decorator";
 import { ObjectId } from "mongoose";
 import {
+  AllNoticesInquiry,
   EventNoticeInquiry,
   NoticeInput,
 } from "../../libs/dto/notice/notice.input";
 import { NoticeUpdate } from "../../libs/dto/notice/notice.update";
 import { WithoutGuard } from "../auth/guards/without.guard";
 import { FAQFeild } from "../../libs/enums/notice.enum";
+import { shapeIntoMongoObjectId } from "../../libs/config";
 
 @Resolver()
 export class NoticeResolver {
@@ -56,5 +58,24 @@ export class NoticeResolver {
   ): Promise<Notice> {
     console.log("Mutation: updateNotice");
     return await this.noticeService.updateNotice(input);
+  }
+
+  @Roles(MemberType.ADMIN)
+  @UseGuards(RolesGuard)
+  @Mutation(() => Notice)
+  public async deleteNotice(@Args("noticeId") input: string): Promise<Notice> {
+    console.log("Mutation: deleteNotice");
+    const noticeId = shapeIntoMongoObjectId(input);
+    return await this.noticeService.deleteNotice(noticeId);
+  }
+
+  @Roles(MemberType.ADMIN)
+  @UseGuards(RolesGuard)
+  @Query((returns) => Notices)
+  public async getAllNoticesByAdmin(
+    @Args("input") input: AllNoticesInquiry,
+  ): Promise<Notices> {
+    console.log("getAllNoticesByAdmin");
+    return await this.noticeService.getAllPNoticesByAdmin(input);
   }
 }

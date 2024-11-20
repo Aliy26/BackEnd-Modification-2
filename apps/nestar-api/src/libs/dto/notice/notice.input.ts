@@ -1,5 +1,5 @@
-import { Field, InputType } from "@nestjs/graphql";
-import { IsNotEmpty, IsOptional, Length } from "class-validator";
+import { Field, InputType, Int } from "@nestjs/graphql";
+import { IsNotEmpty, IsOptional, Length, Min } from "class-validator";
 import {
   FAQFeild,
   NoticeCategory,
@@ -47,4 +47,32 @@ export class EventNoticeInquiry {
   @IsOptional()
   @Field(() => String, { nullable: true })
   noticeStatus?: NoticeStatus;
+}
+
+@InputType()
+class ANISearch {
+  @IsOptional()
+  @Field(() => NoticeStatus, { nullable: true })
+  noticeStatus?: NoticeStatus;
+
+  @IsOptional()
+  @Field(() => [FAQFeild])
+  field?: FAQFeild[];
+}
+
+@InputType()
+export class AllNoticesInquiry {
+  @IsNotEmpty()
+  @Min(1)
+  @Field(() => Int)
+  page: number;
+
+  @IsNotEmpty()
+  @Min(1)
+  @Field(() => Int)
+  limit: number;
+
+  @IsNotEmpty()
+  @Field(() => ANISearch)
+  search: ANISearch;
 }

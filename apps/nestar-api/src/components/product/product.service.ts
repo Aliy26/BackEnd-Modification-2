@@ -404,10 +404,11 @@ export class ProductService {
 
     const search: T = {
       _id: input._id,
-      $or: [
-        { productStatus: ProductStatus.ACTIVE },
-        { productStatus: ProductStatus.SOLD },
-      ],
+      // $or: [
+      //   { productStatus: ProductStatus.ACTIVE },
+      //   { productStatus: ProductStatus.SOLD },
+      //   { productStatus: ProductStatus.DELETE },
+      // ],
     };
 
     if (productStatus === ProductStatus.SOLD) {
