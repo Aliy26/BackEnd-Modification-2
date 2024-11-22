@@ -90,11 +90,14 @@ export class NoticeService {
   public async getAllPNoticesByAdmin(
     input: AllNoticesInquiry,
   ): Promise<Notices> {
-    const { noticeStatus, field } = input.search;
+    const { noticeStatus, field, noticeCategory } = input.search;
     const match: T = {};
 
     if (noticeStatus) match.noticeStatus = noticeStatus;
+    if (noticeCategory) match.noticeCategory = noticeCategory;
     if (field) match.field = { $in: field };
+
+    console.log(match);
 
     const result = await this.noticeModel
       .aggregate([

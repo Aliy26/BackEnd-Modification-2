@@ -55,8 +55,12 @@ class ANISearch {
   @Field(() => NoticeStatus, { nullable: true })
   noticeStatus?: NoticeStatus;
 
+  @IsNotEmpty()
+  @Field(() => NoticeCategory, { nullable: true })
+  noticeCategory?: NoticeCategory;
+
   @IsOptional()
-  @Field(() => [FAQFeild])
+  @Field(() => [FAQFeild], { nullable: true })
   field?: FAQFeild[];
 }
 
