@@ -2,7 +2,7 @@ import { Args, Mutation, Resolver, Query } from "@nestjs/graphql";
 import { ProductService } from "./product.service";
 import { Products, Product } from "../../libs/dto/product/product";
 import {
-  AgentProductsInquiry,
+  MyProductsInquiry,
   AllProductsInquiry,
   OrdinaryInquiry,
   ProductsInquiry,
@@ -91,12 +91,12 @@ export class ProductResolver {
   @Roles(MemberType.AGENT)
   @UseGuards(RolesGuard)
   @Query((returns) => Products)
-  public async getAgentProducts(
-    @Args("input") input: AgentProductsInquiry,
+  public async getMyProducts(
+    @Args("input") input: MyProductsInquiry,
     @AuthMember("_id") memberId: ObjectId,
   ): Promise<Products> {
-    console.log("Query: getAgentProducts");
-    return await this.productService.getAgentProducts(memberId, input);
+    console.log("Query: getMyProducts");
+    return await this.productService.getMyProducts(memberId, input);
   }
 
   @UseGuards(AuthGuard)

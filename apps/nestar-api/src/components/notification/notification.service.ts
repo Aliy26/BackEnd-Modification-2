@@ -11,12 +11,21 @@ import {
   Notifications,
 } from "../../libs/dto/notification/notification";
 import { NotificationInput, T } from "../../libs/types/common";
+import { MessageInput } from "../../libs/dto/notification/notification.input";
+import { shapeIntoMongoObjectId } from "../../libs/config";
+import {
+  NotificationGroup,
+  NotificationType,
+} from "../../libs/enums/notification.enum";
+import { Product } from "../../libs/dto/product/product";
+import { ProductStatus } from "../../libs/enums/product.enum";
 
 @Injectable()
 export class NotificationService {
   constructor(
     @InjectModel("Notification")
     private readonly notificationModel: Model<Notification>,
+    @InjectModel("Product") private readonly productModel: Model<Product>,
   ) {}
 
   public async notifyMember(input: NotificationInput): Promise<Notification> {
@@ -100,5 +109,32 @@ export class NotificationService {
     notifications.list = result as Notification[];
 
     return notifications;
+  }
+
+  public async sendMessage(input: MessageInput): Promise<Notification> {
+    try {
+      const product = await this.productModel.findById(input.productId);
+
+      if (!product || product.productStatus !== ProductStatus.ACTIVE)
+        throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+
+      if (String(product.memberId) === String(input.memberId))
+        throw new InternalServerErrorException(Message.BAD_REQUEST);
+
+      const notificationInput: NotificationInput = {
+        authorId: input.memberId,
+        receiverId: product.memberId,
+        productId: product._id,
+        notificationType: NotificationType.MESSAGE,
+        notificationGroup: NotificationGroup.PRODUCT,
+        notificationDesc: input.notificationDesc,
+      };
+
+      const result = await this.notificationModel.create(notificationInput);
+      return result;
+    } catch (err) {
+      console.log("Error, sendMessage Notification Service");
+      throw new InternalServerErrorException(Message.CREATE_FAILED);
+    }
   }
 }

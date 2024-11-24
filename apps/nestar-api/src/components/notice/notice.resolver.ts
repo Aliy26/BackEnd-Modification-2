@@ -16,6 +16,7 @@ import { NoticeUpdate } from "../../libs/dto/notice/notice.update";
 import { WithoutGuard } from "../auth/guards/without.guard";
 import { FAQFeild } from "../../libs/enums/notice.enum";
 import { shapeIntoMongoObjectId } from "../../libs/config";
+import { AuthGuard } from "../auth/guards/auth.guard";
 
 @Resolver()
 export class NoticeResolver {

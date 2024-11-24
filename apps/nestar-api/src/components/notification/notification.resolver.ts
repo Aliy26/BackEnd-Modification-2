@@ -9,6 +9,7 @@ import { AuthGuard } from "../auth/guards/auth.guard";
 import { AuthMember } from "../auth/decorators/authMember.decorator";
 import { ObjectId } from "mongoose";
 import { shapeIntoMongoObjectId } from "../../libs/config";
+import { MessageInput } from "../../libs/dto/notification/notification.input";
 
 @Resolver()
 export class NotificationResolver {
@@ -36,5 +37,16 @@ export class NotificationResolver {
       recieverId,
       notificationId,
     );
+  }
+
+  @UseGuards(AuthGuard)
+  @Mutation(() => Notification)
+  public async sendMessage(
+    @Args("input") input: MessageInput,
+    @AuthMember("_id") memberId: ObjectId,
+  ): Promise<Notification> {
+    console.log("Mutation: sendMessage");
+    input.memberId = memberId;
+    return await this.notificationService.sendMessage(input);
   }
 }
