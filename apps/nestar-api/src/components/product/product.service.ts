@@ -7,7 +7,7 @@ import { InjectModel, Prop } from "@nestjs/mongoose";
 import { Model, ObjectId } from "mongoose";
 import { Products, Product } from "../../libs/dto/product/product";
 import {
-  MyProductsInquiry,
+  AgentProductsInquiry,
   AllProductsInquiry,
   OrdinaryInquiry,
   ProductsInquiry,
@@ -277,9 +277,9 @@ export class ProductService {
     return await this.viewService.getVisitedProducts(memberId, input);
   }
 
-  public async getMyProducts(
+  public async getAgentProducts(
     memberId: ObjectId,
-    input: MyProductsInquiry,
+    input: AgentProductsInquiry,
   ): Promise<Products> {
     const { productStatus } = input.search;
     if (productStatus === ProductStatus.DELETE)

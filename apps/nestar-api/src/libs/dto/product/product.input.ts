@@ -164,7 +164,7 @@ class APISearch {
 }
 
 @InputType()
-export class MyProductsInquiry {
+export class AgentProductsInquiry {
   @IsNotEmpty()
   @Min(1)
   @Field(() => Int)
