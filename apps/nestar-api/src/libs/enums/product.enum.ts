@@ -31,6 +31,7 @@ registerEnumType(ProductBrand, {
 export enum ProductCategory {
   LivingRoom = "Living Room",
   Bedroom = "Bedroom",
+  Office = "Office",
   Kitchen = "Kitchen",
   Work = "Work",
   Kids = "Kids",
