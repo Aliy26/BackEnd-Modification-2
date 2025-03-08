@@ -87,10 +87,11 @@ export class NoticeService {
     return result;
   }
 
-  public async getAllPNoticesByAdmin(
+  public async getAllNoticesByAdmin(
     input: AllNoticesInquiry,
   ): Promise<Notices> {
     const { noticeStatus, field, noticeCategory } = input.search;
+
     const match: T = {};
 
     if (noticeStatus) match.noticeStatus = noticeStatus;

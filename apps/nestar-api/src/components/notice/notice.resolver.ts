@@ -77,6 +77,6 @@ export class NoticeResolver {
     @Args("input") input: AllNoticesInquiry,
   ): Promise<Notices> {
     console.log("getAllNoticesByAdmin");
-    return await this.noticeService.getAllPNoticesByAdmin(input);
+    return await this.noticeService.getAllNoticesByAdmin(input);
   }
 }
