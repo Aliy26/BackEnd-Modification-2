@@ -91,7 +91,7 @@ export class NoticeService {
     input: AllNoticesInquiry,
   ): Promise<Notices> {
     const { noticeStatus, field, noticeCategory } = input.search;
-
+    console.log("input:", input);
     const match: T = {};
 
     if (noticeStatus) match.noticeStatus = noticeStatus;
