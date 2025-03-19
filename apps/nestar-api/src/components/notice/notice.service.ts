@@ -15,8 +15,6 @@ import {
 import { NoticeUpdate } from "../../libs/dto/notice/notice.update";
 import { T } from "../../libs/types/common";
 import { FAQFeild, NoticeStatus } from "../../libs/enums/notice.enum";
-import { group } from "console";
-import { internalExecuteOperation } from "@apollo/server/dist/esm/ApolloServer";
 
 @Injectable()
 export class NoticeService {
