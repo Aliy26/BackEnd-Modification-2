@@ -25,7 +25,7 @@ export class NoticeInput {
 
   @IsOptional()
   @Field(() => FAQFeild, { nullable: true })
-  field?: FAQFeild;
+  field?: string;
 
   @IsOptional()
   @Field(() => String, { nullable: true })

@@ -35,6 +35,7 @@ export class NoticeService {
     input: NoticeInput,
   ): Promise<Notice> {
     try {
+      console.log("input:", input);
       input.memberId = memberId;
       const result = await this.noticeModel.create(input);
 
