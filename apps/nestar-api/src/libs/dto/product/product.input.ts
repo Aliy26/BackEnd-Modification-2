@@ -105,6 +105,10 @@ class PISearch {
   productStock?: boolean;
 
   @IsOptional()
+  @Field(() => Boolean, { nullable: true })
+  productDesc?: boolean;
+
+  @IsOptional()
   @Field(() => [ProductType], { nullable: true })
   typeList?: ProductType[];
 
